@@ -13,17 +13,22 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         var btnLogin = findViewById<Button>(R.id.btnLogin)
+        var btnRegist = findViewById<Button>(R.id.btnRegister)
         var etUName = findViewById<EditText>(R.id.etUName)
         var etPassword = findViewById<EditText>(R.id.etPassword)
         var warning = findViewById<TextView>(R.id.warning)
         var unameFound = false
         var passFound = false
         btnLogin.setOnClickListener {
+
             if(unameFound && passFound){
                 warning.visibility = View.GONE
             }else{
                 warning.visibility = View.VISIBLE
             }
+        }
+        btnRegist.setOnClickListener {
+
         }
     }
 }

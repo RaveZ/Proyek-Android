@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "549033533244",
+    "project_id": "proyek-android-forum-online",
+    "storage_bucket": "proyek-android-forum-online.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:549033533244:android:b4ac5c0b802e6771f10839",
+        "android_client_info": {
+          "package_name": "com.example.proyek_android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "549033533244-0egtkpe5uhqn3d1qrkkdlk5cqs7ftvli.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8_54QMq9OE5OJxfBYQejmVwzD0NYEwTs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "549033533244-0egtkpe5uhqn3d1qrkkdlk5cqs7ftvli.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

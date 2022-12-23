@@ -1,5 +1,6 @@
 package com.example.proyek_android
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -28,14 +29,12 @@ class register : AppCompatActivity() {
         var etRAlamat = findViewById<EditText>(R.id.etRPostalAddress)
         var tvWarning = findViewById<TextView>(R.id.tvWarning)
         var btnRegist = findViewById<Button>(R.id.btnRegist)
-        var emailFound = false
-        var noTelpFound = false
-        var docPath = ""
+        var btnSubmitDate = findViewById<Button>(R.id.btnSubmitTgl)
+        var msg = ""
         db = FirebaseFirestore.getInstance()
-        val collection = db.collection("tbUserDetail")
-        val countQuery = collection.count()
         etRTglLahir.setOnClickListener {
             datePicker.visibility = View.VISIBLE
+            btnSubmitDate.visibility = View.VISIBLE
             val today = Calendar.getInstance()
             datePicker.init(
                 today.get(Calendar.YEAR), today.get(Calendar.MONTH),
@@ -43,10 +42,13 @@ class register : AppCompatActivity() {
 
             ) { view, year, month, day ->
                 val month = month + 1
-                val msg = "$day/$month/$year"
-                etRTglLahir.setText(msg)
-                datePicker.visibility = View.GONE
+                msg = "$day/$month/$year"
             }
+        }
+        btnSubmitDate.setOnClickListener {
+            btnSubmitDate.visibility = View.GONE
+            datePicker.visibility = View.GONE
+            etRTglLahir.setText(msg)
         }
         btnRegist.setOnClickListener {
             if (etRNama.text.toString() == "" || etRAlamat.text.toString() == "" || etREmail.text.toString() == "" || etRNoTelp.text.toString() == ""
@@ -63,50 +65,24 @@ class register : AppCompatActivity() {
                     if (task.isSuccessful) {
                         val document = task.result
                         tvWarning.setText("Email sudah terdaftar")
-                        emailFound = true
-//                        tvWarning.setText("${document?.data}")
-//                        tvWarning.visibility = View.VISIBLE
-                    }else{
-                        tvWarning.setText(emailFound.toString())
                         tvWarning.visibility = View.VISIBLE
-                        if(emailFound == false){
-                            val user = dataRegist(
-                                etRNama.text.toString(),
-                                etRNoTelp.text.toString(),
-                                etREmail.text.toString(),
-                                etRTglLahir.text.toString(),
-                                etRPass.text.toString(),
-                                etRAlamat.text.toString()
-                            )
-                            db.collection("tbUserDetail").document(etREmail.text.toString()).set(user)
-//                    tvWarning.setText("data masuk")
-//                    tvWarning.visibility = View.VISIBLE
-//                    val intent = Intent(this@register, MainActivity::class.java).apply{
-//                    }
-//                    startActivity(intent)
-//                }
+                    }else{
+                       val user = dataRegist(
+                           etRNama.text.toString(),
+                           etRNoTelp.text.toString(),
+                           etREmail.text.toString(),
+                           etRTglLahir.text.toString(),
+                           etRPass.text.toString(),
+                           etRAlamat.text.toString()
+                       )
+                        db.collection("tbUserDetail").document(etREmail.text.toString()).set(user)
+                        val intent = Intent(this@register, MainActivity::class.java).apply{
                         }
+                        startActivity(intent)
+//                        tvWarning.setText("data masuk")
+//                        tvWarning.visibility = View.VISIBLE
                     }
                 }
-//                tvWarning.setText(emailFound.toString())
-//                tvWarning.visibility = View.VISIBLE
-//                if(emailFound == false){
-//                    val user = dataRegist(
-//                        etRNama.text.toString(),
-//                        etRNoTelp.text.toString(),
-//                        etREmail.text.toString(),
-//                        etRTglLahir.text.toString(),
-//                        etRPass.text.toString(),
-//                        etRAlamat.text.toString()
-//                    )
-//                    db.collection("tbUserDetail").document(etREmail.text.toString()).set(user)
-////                    tvWarning.setText("data masuk")
-////                    tvWarning.visibility = View.VISIBLE
-////                    val intent = Intent(this@register, MainActivity::class.java).apply{
-////                    }
-////                    startActivity(intent)
-////                }
-//                }
 
             }
 

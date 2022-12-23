@@ -1,12 +1,15 @@
 package com.example.proyek_android
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.proyek_android.DataClass.Forum
+import com.example.proyek_android.Helper.DateHelper.getCurrentDate
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
 
 class CreateForum : AppCompatActivity() {
@@ -14,6 +17,8 @@ class CreateForum : AppCompatActivity() {
 
     private var Categories : MutableList<String> = emptyList<String>().toMutableList()
     private val CategoriesLocal = arrayOf("item 1", "item 2", "item 3")
+
+    var tanggal : String = getCurrentDate()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_forum)
@@ -51,8 +56,27 @@ class CreateForum : AppCompatActivity() {
 
 
         _btnCreateForum.setOnClickListener {
-            val newForum = Forum(_tTitle.text.toString(), _tDescription.text.toString(), selectedCategory)
-            db.collection("tbForum").add(newForum)
+            if(_tTitle.text.isNullOrEmpty() || _tDescription.text.isNullOrEmpty()){
+                Toast.makeText(this@CreateForum, "Title/Description still Empty!", Toast.LENGTH_LONG).show()
+            }else {
+                val countQuery = db.collection("tbForum").count()
+                countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val newForum = Forum(
+                            _tTitle.text.toString(),
+                            _tDescription.text.toString(),
+                            selectedCategory,
+                            tanggal,
+                            0
+                        )
+                        db.collection("tbForum")
+                            .document(task.result.count.toString())
+                            .set(newForum)
+                    } else {
+                        Log.d(TAG, "Count failed: ", task.getException())
+                    }
+                }
+            }
 
 
         }

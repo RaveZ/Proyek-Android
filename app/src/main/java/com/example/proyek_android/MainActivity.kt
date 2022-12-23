@@ -7,25 +7,54 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Source
 
 class MainActivity : AppCompatActivity() {
+    lateinit var db : FirebaseFirestore
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        db = FirebaseFirestore.getInstance()
         var btnLogin = findViewById<Button>(R.id.btnLogin)
         var btnRegist = findViewById<Button>(R.id.btnRegister)
         var etUName = findViewById<EditText>(R.id.etUName)
+        var etEmail = findViewById<EditText>(R.id.etEmail)
         var etPassword = findViewById<EditText>(R.id.etPassword)
         var warning = findViewById<TextView>(R.id.warning)
         var unameFound = false
         var passFound = false
         btnLogin.setOnClickListener {
-
-            if(unameFound && passFound){
-                warning.visibility = View.GONE
+            if(etEmail.text.toString() == "" || etPassword.text.toString() == "" || etUName.text.toString() == ""){
+                warning.setText("Tidak boleh kosong")
+                warning.visibility=View.VISIBLE
             }else{
-                warning.visibility = View.VISIBLE
+                val docRef = db.collection("tbUserDetail").document(etEmail.text.toString())
+                val source = Source.CACHE
+                docRef.get(source).addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val document = task.result
+//                        warning.setText("test in")
+//                        warning.visibility=View.VISIBLE
+                        if(document.data?.getValue("nama").toString() == etUName.text.toString()){
+//                            warning.setText("test")
+//                            warning.visibility=View.VISIBLE
+                            if(etPassword.text.toString() == document.data?.getValue("pass").toString()){
+//                                warning.setText("data ditemukan")
+//                                warning.visibility=View.VISIBLE
+                            }else{
+                                warning.setText("password salah")
+                                warning.visibility=View.VISIBLE
+                            }
+                        }else{
+                            warning.setText("username salah")
+                            warning.visibility=View.VISIBLE
+                        }
+                    }else{
+                        warning.setText("Email tidak terdaftar")
+                        warning.visibility = View.VISIBLE
+                    }
+                }
             }
         }
         btnRegist.setOnClickListener {

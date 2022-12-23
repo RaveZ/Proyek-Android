@@ -7,19 +7,37 @@
     android:orientation="vertical"
     tools:context=".postDetail">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:srcCompat="@drawable/heart" />
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="username" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Title"
-        android:textSize="30dp"
-        />
+        android:textSize="30dp" />
 
     <TextView
         android:id="@+id/tvIsiPost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="isi post" />
+
     <TextView
         android:id="@+id/tvTanggal"
         android:layout_width="match_parent"
@@ -46,5 +64,11 @@
             app:srcCompat="@drawable/heart"
             tools:ignore="SpeakableTextPresentCheck" />
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/recView">
+    </androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>

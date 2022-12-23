@@ -6,7 +6,7 @@ import android.os.Parcelable
 data class Forum (
     var Title : String,
     var Description : String,
-    var Category : String,
+    var Category : Int,
     var DateCreated : String,
     var LikeCount : Int
 )

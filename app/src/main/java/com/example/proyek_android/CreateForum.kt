@@ -24,8 +24,8 @@ class CreateForum : AppCompatActivity() {
         //var
         var Categories = ArrayList<String>()
         val _btnCreateForum = findViewById<Button>(R.id.btnCreateForum)
-        var _tTitle = findViewById<TextInputEditText>(R.id.tEditDescription)
-        var _tDescription = findViewById<TextInputEditText>(R.id.tEditTitle)
+        var _tTitle = findViewById<TextInputEditText>(R.id.tTitle)
+        var _tDescription = findViewById<TextInputEditText>(R.id.tDescription)
 
         var _spinnerCategory = findViewById<Spinner>(R.id.spinnerCategory)
 
@@ -42,7 +42,7 @@ class CreateForum : AppCompatActivity() {
                 }
 
                 //implementation
-                var selectedCategory = Categories[0]
+                var selectedCategory = 0
                 val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
                     this@CreateForum,
                     android.R.layout.simple_spinner_item, Categories
@@ -52,7 +52,7 @@ class CreateForum : AppCompatActivity() {
 
                     _spinnerCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
                         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                            selectedCategory = Categories[position]
+                            selectedCategory = position
                         }
 
                         override fun onNothingSelected(parent: AdapterView<*>?) {

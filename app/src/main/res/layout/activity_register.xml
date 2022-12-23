@@ -12,8 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:textColor="#FF0000"/>
+
 
     <EditText
         android:id="@+id/etRNama"
@@ -31,14 +32,27 @@
         android:inputType="textEmailAddress"
         android:minHeight="48dp" />
 
+    <TextView
+        android:id="@+id/tvTglLahir"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tanggal Lahir" />
+
     <EditText
         android:id="@+id/etRTglLahir"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Tanggal Lahir"
-        android:inputType="date"
+        android:hint="DD/MM/YYYY"
         android:minHeight="48dp" />
+
+
+    <DatePicker
+        android:id="@+id/tglLahir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:datePickerMode="calendar"
+        android:visibility="gone"
+        />
 
     <EditText
         android:id="@+id/etRPostalAddress"

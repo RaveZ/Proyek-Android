@@ -1,5 +1,6 @@
 package com.example.proyek_android
 //login page
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -28,7 +29,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
         btnRegist.setOnClickListener {
-
+            val intent = Intent(this@MainActivity, register::class.java).apply{
+            }
+            startActivity(intent)
         }
+    }
+    companion object{
+        const val data = "data"
     }
 }

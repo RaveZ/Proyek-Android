@@ -15,75 +15,91 @@ import com.google.firebase.firestore.FirebaseFirestore
 class CreateForum : AppCompatActivity() {
     lateinit  var db : FirebaseFirestore
 
-    private var Categories : MutableList<String> = emptyList<String>().toMutableList()
-    private val CategoriesLocal = arrayOf("item 1", "item 2", "item 3")
 
     var tanggal : String = getCurrentDate()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_forum)
 
-        //database
-        db = FirebaseFirestore.getInstance()
-
         //var
-        var selectedCategory = CategoriesLocal[0]
+        var Categories = ArrayList<String>()
         val _btnCreateForum = findViewById<Button>(R.id.btnCreateForum)
-        var _tTitle = findViewById<TextInputEditText>(R.id.tInputDescription)
-        var _tDescription = findViewById<TextInputEditText>(R.id.tInputTitle)
+        var _tTitle = findViewById<TextInputEditText>(R.id.tEditDescription)
+        var _tDescription = findViewById<TextInputEditText>(R.id.tEditTitle)
 
         var _spinnerCategory = findViewById<Spinner>(R.id.spinnerCategory)
 
-        val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
-            this@CreateForum,
-            android.R.layout.simple_spinner_item, CategoriesLocal
-        )
 
-        //implementation
-        _spinnerCategory.adapter = spinnerAdapter
-        if(_spinnerCategory != null){
-            _spinnerCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    selectedCategory = CategoriesLocal[position]
+
+        //database
+        db = FirebaseFirestore.getInstance()
+        //fetch data
+        db.collection("Categories")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    Categories.add(document.data.getValue("Category").toString())
                 }
 
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                    TODO("Not yet implemented")
-                }
+                //implementation
+                var selectedCategory = Categories[0]
+                val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
+                    this@CreateForum,
+                    android.R.layout.simple_spinner_item, Categories
+                )
+                _spinnerCategory.adapter = spinnerAdapter
+                if(_spinnerCategory != null){
 
-            }
-        }
+                    _spinnerCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+                        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                            selectedCategory = Categories[position]
+                        }
 
+                        override fun onNothingSelected(parent: AdapterView<*>?) {
+                            TODO("Not yet implemented")
+                        }
 
-        _btnCreateForum.setOnClickListener {
-            if(_tTitle.text.isNullOrEmpty() || _tDescription.text.isNullOrEmpty()){
-                Toast.makeText(this@CreateForum, "Title/Description still Empty!", Toast.LENGTH_LONG).show()
-            }else {
-                val countQuery = db.collection("tbForum").count()
-                countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val newForum = Forum(
-                            _tTitle.text.toString(),
-                            _tDescription.text.toString(),
-                            selectedCategory,
-                            tanggal,
-                            0
-                        )
-                        db.collection("tbForum")
-                            .document(task.result.count.toString())
-                            .set(newForum)
-                    } else {
-                        Log.d(TAG, "Count failed: ", task.getException())
                     }
                 }
+
+
+                _btnCreateForum.setOnClickListener {
+                    if(_tTitle.text.isNullOrEmpty() || _tDescription.text.isNullOrEmpty()){
+                        Toast.makeText(this@CreateForum, "Title/Description still Empty!", Toast.LENGTH_LONG).show()
+                    }else {
+                        val countQuery = db.collection("tbForum").count()
+                        countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val newForum = Forum(
+                                    _tTitle.text.toString(),
+                                    _tDescription.text.toString(),
+                                    selectedCategory,
+                                    tanggal,
+                                    0
+                                )
+                                db.collection("tbForum")
+                                    .document(task.result.count.toString())
+                                    .set(newForum)
+                            } else {
+                                Log.d(TAG, "Count failed: ", task.getException())
+                            }
+                        }
+                    }
             }
+
+
+
+
+
+
+
 
 
         }
 
 
         //debug
-        Log.d("Data",_tDescription.text.toString())
+        Log.d("Data",Categories.count().toString())
 
     }
 }

@@ -50,7 +50,7 @@
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/addComment"
+            android:id="@+id/btnAddComment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="48dp"
@@ -58,7 +58,7 @@
             tools:ignore="SpeakableTextPresentCheck" />
 
         <ImageButton
-            android:id="@+id/like"
+            android:id="@+id/btnLike"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/heart"

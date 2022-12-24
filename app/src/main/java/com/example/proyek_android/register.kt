@@ -1,20 +1,24 @@
 package com.example.proyek_android
 
 import android.app.DatePickerDialog
+import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.example.proyek_android.DataClass.Forum
 import com.google.firebase.database.*
+import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Source
-import dataRegist
+import com.example.proyek_android.DataClass.DataRegist
 import java.util.*
 
 
 class register : AppCompatActivity() {
-    lateinit var db : FirebaseFirestore
+    lateinit var db: FirebaseFirestore
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +56,8 @@ class register : AppCompatActivity() {
         }
         btnRegist.setOnClickListener {
             if (etRNama.text.toString() == "" || etRAlamat.text.toString() == "" || etREmail.text.toString() == "" || etRNoTelp.text.toString() == ""
-                || etRPass.text.toString() == "" || etRTglLahir.text.toString() == "") {
+                || etRPass.text.toString() == "" || etRTglLahir.text.toString() == ""
+            ) {
                 tvWarning.setText("Tidak boleh kosong")
                 tvWarning.visibility = View.VISIBLE
             } else {
@@ -66,29 +71,35 @@ class register : AppCompatActivity() {
                         val document = task.result
                         tvWarning.setText("Email sudah terdaftar")
                         tvWarning.visibility = View.VISIBLE
-                    }else{
-                       val user = dataRegist(
-                           etRNama.text.toString(),
-                           etRNoTelp.text.toString(),
-                           etREmail.text.toString(),
-                           etRTglLahir.text.toString(),
-                           etRPass.text.toString(),
-                           etRAlamat.text.toString()
-                       )
-                        db.collection("tbUserDetail").document(etREmail.text.toString()).set(user)
-                        val intent = Intent(this@register, MainActivity::class.java).apply{
-                        }
-                        startActivity(intent)
+                    } else {
+                        val countQuery = db.collection("tbUserDetail").count()
+                        countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val user = DataRegist(
+                                    etRNama.text.toString(),
+                                    etRNoTelp.text.toString(),
+                                    etREmail.text.toString(),
+                                    etRTglLahir.text.toString(),
+                                    etRPass.text.toString(),
+                                    etRAlamat.text.toString()
+                                )
+                                db.collection("tbUserDetail")
+                                    .document(task.result.count.toString())
+                                    .set(user)
+                            } else {
+                                Log.d(ContentValues.TAG, "Count failed: ", task.getException())
+                            }
+                            val intent = Intent(this@register, MainActivity::class.java).apply {
+                            }
+                            startActivity(intent)
 //                        tvWarning.setText("data masuk")
 //                        tvWarning.visibility = View.VISIBLE
+                        }
                     }
+
                 }
 
             }
-
         }
-    }
-    companion object{
-        const val data = "data"
     }
 }

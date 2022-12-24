@@ -5,17 +5,20 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.proyek_android.DataClass.comment
 import com.example.proyek_android.R
+import com.google.firebase.firestore.FirebaseFirestore
 
 class adapterComment (
     private var listComment: ArrayList<comment>
 ): RecyclerView.Adapter<adapterComment.ListViewHolder>()
 {
+    lateinit var db: FirebaseFirestore
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         var userName : TextView = itemView.findViewById(R.id.comUname)
         var isiComment : TextView = itemView.findViewById(R.id.isiComment)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
+
         val view : View = LayoutInflater.from(parent.context)
             .inflate(R.layout.itemcomment,parent,false)
         return ListViewHolder(view)
@@ -30,4 +33,5 @@ class adapterComment (
     override fun getItemCount(): Int {
         return listComment.size
     }
+
 }

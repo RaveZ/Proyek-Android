@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 //                                warning.setText("data ditemukan")
 //                                warning.visibility=View.VISIBLE
                                 val intent = Intent(this@MainActivity, postDetail::class.java).apply {
-                                    putExtra(postDetail.dataUser, pos)
+                                    putExtra(postDetail.dataUser, pos.toString())
                                 }
                                 startActivity(intent)
                             }else{

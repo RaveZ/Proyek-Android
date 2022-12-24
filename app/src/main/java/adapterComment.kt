@@ -1,3 +1,4 @@
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -15,14 +16,18 @@ class adapterComment (
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
-        TODO("Not yet implemented")
+        val view : View = LayoutInflater.from(parent.context)
+            .inflate(R.layout.itemcomment,parent,false)
+        return ListViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        var comment = listComment[position]
+        holder.userName.setText(comment.nama)
+        holder.isiComment.setText(comment.isi)
     }
 
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+        return listComment.size
     }
 }

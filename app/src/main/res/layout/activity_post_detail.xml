@@ -78,6 +78,27 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/recView">
+
     </androidx.recyclerview.widget.RecyclerView>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/inputLayout"
+        android:visibility="gone">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="300px"
+            android:id="@+id/inputComment"
+            android:hint="Tambahkan komentar" />
+
+        <Button
+            android:id="@+id/btnSubmitComment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Submit" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
 </LinearLayout>

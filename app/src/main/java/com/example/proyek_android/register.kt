@@ -34,8 +34,16 @@ class register : AppCompatActivity() {
         var tvWarning = findViewById<TextView>(R.id.tvWarning)
         var btnRegist = findViewById<Button>(R.id.btnRegist)
         var btnSubmitDate = findViewById<Button>(R.id.btnSubmitTgl)
+        var emailList = ArrayList<String>()
         var msg = ""
         db = FirebaseFirestore.getInstance()
+        db.collection("tbUserDetail")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    emailList.add(document.data.getValue("email").toString())
+                }
+            }
         etRTglLahir.setOnClickListener {
             datePicker.visibility = View.VISIBLE
             btnSubmitDate.visibility = View.VISIBLE
@@ -63,43 +71,44 @@ class register : AppCompatActivity() {
             } else {
 //                tvWarning.setText("lolos")
 //                tvWarning.visibility = View.VISIBLE
-                tvWarning.visibility = View.GONE
-                val docRef = db.collection("tbUserDetail").document(etREmail.text.toString())
-                val source = Source.CACHE
-                docRef.get(source).addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val document = task.result
-                        tvWarning.setText("Email sudah terdaftar")
+                var emailFound = false
+                for(i in 0..emailList.lastIndex){
+                    if(emailList[i] == etREmail.text.toString()){
+                        tvWarning.setText("email sudah terdaftar")
                         tvWarning.visibility = View.VISIBLE
-                    } else {
-                        val countQuery = db.collection("tbUserDetail").count()
-                        countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                val user = DataRegist(
-                                    etRNama.text.toString(),
-                                    etRNoTelp.text.toString(),
-                                    etREmail.text.toString(),
-                                    etRTglLahir.text.toString(),
-                                    etRPass.text.toString(),
-                                    etRAlamat.text.toString()
-                                )
-                                db.collection("tbUserDetail")
-                                    .document(task.result.count.toString())
-                                    .set(user)
-                            } else {
-                                Log.d(ContentValues.TAG, "Count failed: ", task.getException())
-                            }
-                            val intent = Intent(this@register, MainActivity::class.java).apply {
-                            }
-                            startActivity(intent)
+                        emailFound = true
+                        break
+                    }
+                }
+                if(emailFound == false) {
+                    val countQuery = db.collection("tbUserDetail").count()
+                    countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val user = DataRegist(
+                                etRNama.text.toString(),
+                                etRNoTelp.text.toString(),
+                                etREmail.text.toString(),
+                                etRTglLahir.text.toString(),
+                                etRPass.text.toString(),
+                                etRAlamat.text.toString()
+                            )
+                            db.collection("tbUserDetail")
+                                .document(task.result.count.toString())
+                                .set(user)
+                        } else {
+                            Log.d(ContentValues.TAG, "Count failed: ", task.getException())
+                        }
+                        val intent = Intent(this@register, MainActivity::class.java).apply {
+                        }
+                        startActivity(intent)
 //                        tvWarning.setText("data masuk")
 //                        tvWarning.visibility = View.VISIBLE
-                        }
                     }
-
                 }
 
             }
+
         }
+
     }
 }

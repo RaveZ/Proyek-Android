@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.TextView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Source
+import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
     lateinit var db : FirebaseFirestore
@@ -24,12 +25,27 @@ class MainActivity : AppCompatActivity() {
         var warning = findViewById<TextView>(R.id.warning)
         var unameFound = false
         var passFound = false
+        var emailList = ArrayList<String>()
+        db.collection("tbUserDetail")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    emailList.add(document.data.getValue("email").toString())
+                }
+            }
         btnLogin.setOnClickListener {
             if(etEmail.text.toString() == "" || etPassword.text.toString() == "" || etUName.text.toString() == ""){
                 warning.setText("Tidak boleh kosong")
                 warning.visibility=View.VISIBLE
             }else{
-                val docRef = db.collection("tbUserDetail").document(etEmail.text.toString())
+                var pos = 0
+                for(i in 0..emailList.lastIndex){
+                    if(emailList[i] == etEmail.text.toString()){
+                        pos = i
+                        break
+                    }
+                }
+                val docRef = db.collection("tbUserDetail").document(pos.toString())
                 val source = Source.CACHE
                 docRef.get(source).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -40,8 +56,8 @@ class MainActivity : AppCompatActivity() {
 //                            warning.setText("test")
 //                            warning.visibility=View.VISIBLE
                             if(etPassword.text.toString() == document.data?.getValue("pass").toString()){
-//                                warning.setText("data ditemukan")
-//                                warning.visibility=View.VISIBLE
+                                warning.setText("data ditemukan")
+                                warning.visibility=View.VISIBLE
                             }else{
                                 warning.setText("password salah")
                                 warning.visibility=View.VISIBLE

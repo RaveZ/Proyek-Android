@@ -32,7 +32,7 @@ class CreateForum : AppCompatActivity() {
 
 
         //database
-        db = FirebaseFirestore.getInstance()
+            db = FirebaseFirestore.getInstance()
         //fetch data
         db.collection("Categories")
             .get()

@@ -56,8 +56,12 @@ class MainActivity : AppCompatActivity() {
 //                            warning.setText("test")
 //                            warning.visibility=View.VISIBLE
                             if(etPassword.text.toString() == document.data?.getValue("pass").toString()){
-                                warning.setText("data ditemukan")
-                                warning.visibility=View.VISIBLE
+//                                warning.setText("data ditemukan")
+//                                warning.visibility=View.VISIBLE
+                                val intent = Intent(this@MainActivity, postDetail::class.java).apply {
+                                    putExtra(postDetail.dataUser, pos)
+                                }
+                                startActivity(intent)
                             }else{
                                 warning.setText("password salah")
                                 warning.visibility=View.VISIBLE

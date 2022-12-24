@@ -1,6 +1,5 @@
 package com.example.proyek_android
 
-import android.app.DatePickerDialog
 import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
@@ -8,11 +7,8 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.example.proyek_android.DataClass.Forum
-import com.google.firebase.database.*
 import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Source
 import com.example.proyek_android.DataClass.DataRegist
 import java.util.*
 

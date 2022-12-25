@@ -1,6 +1,7 @@
 package com.example.proyek_android
 //login page
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -13,10 +14,14 @@ import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
     lateinit var db : FirebaseFirestore
+    lateinit var sp : SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         db = FirebaseFirestore.getInstance()
+        sp = getSharedPreferences("dataAkun", MODE_PRIVATE)
+
         var btnLogin = findViewById<Button>(R.id.btnLogin)
         var btnRegist = findViewById<Button>(R.id.btnRegister)
         var etUName = findViewById<EditText>(R.id.etUName)
@@ -25,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         var warning = findViewById<TextView>(R.id.warning)
         var unameFound = false
         var passFound = false
+
         var emailList = ArrayList<String>()
         db.collection("tbUserDetail")
             .get()
@@ -61,6 +67,12 @@ class MainActivity : AppCompatActivity() {
                                 val intent = Intent(this@MainActivity, postDetail::class.java).apply {
                                     putExtra(postDetail.dataUser, pos.toString())
                                 }
+//                                val intent = Intent(this@MainActivity, Homepage::class.java).apply {
+//                                    putExtra(postDetail.dataUser, pos.toString())
+//                                }
+                                val editor = sp.edit()
+                                editor.putInt("spAkun", pos)
+                                editor.apply()
                                 startActivity(intent)
                             }else{
                                 warning.setText("password salah")

@@ -23,6 +23,7 @@ class EditForum : AppCompatActivity() {
         //var
         var Categories = ArrayList<String>()
         val _btnEditForum = findViewById<Button>(R.id.btnEditForum)
+        val _btnBack = findViewById<ImageView>(R.id.btnBackEditForum)
         var _tEditTitle = findViewById<TextInputEditText>(R.id.tEditTitle)
         var _tEditDescription = findViewById<TextInputEditText>(R.id.tEditDescription)
 
@@ -96,5 +97,9 @@ class EditForum : AppCompatActivity() {
                 }
 
             }
+
+        _btnBack.setOnClickListener {
+            super.onBackPressed()
+        }
     }
 }

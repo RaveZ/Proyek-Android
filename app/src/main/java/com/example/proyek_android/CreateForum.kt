@@ -24,6 +24,7 @@ class CreateForum : AppCompatActivity() {
         //var
         var Categories = ArrayList<String>()
         val _btnCreateForum = findViewById<Button>(R.id.btnCreateForum)
+        val _btnBack = findViewById<ImageView>(R.id.btnBackCreateForum)
         var _tTitle = findViewById<TextInputEditText>(R.id.tTitle)
         var _tDescription = findViewById<TextInputEditText>(R.id.tDescription)
 
@@ -95,8 +96,12 @@ class CreateForum : AppCompatActivity() {
 
 
 
+
         }
 
+        _btnBack.setOnClickListener {
+            super.onBackPressed()
+        }
 
         //debug
         Log.d("Data",Categories.count().toString())

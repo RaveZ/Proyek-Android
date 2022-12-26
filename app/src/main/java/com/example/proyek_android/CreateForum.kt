@@ -2,6 +2,7 @@ package com.example.proyek_android
 
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -15,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class CreateForum : AppCompatActivity() {
     lateinit  var db : FirebaseFirestore
+    lateinit var sp : SharedPreferences
 
 
     var tanggal : String = getCurrentDate()
@@ -35,6 +37,8 @@ class CreateForum : AppCompatActivity() {
 
         //database
             db = FirebaseFirestore.getInstance()
+        sp = getSharedPreferences("dataAkun", MODE_PRIVATE)
+        val userId = sp.getInt("spAkun", 0)
         //fetch data
         db.collection("Categories")
             .get()
@@ -74,6 +78,7 @@ class CreateForum : AppCompatActivity() {
                             if (task.isSuccessful) {
                                 val newForum = Forum(
                                     task.result.count.toString().toInt(),
+                                    userId,
                                     _tTitle.text.toString(),
                                     _tDescription.text.toString(),
                                     selectedCategory,

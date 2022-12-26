@@ -2,6 +2,7 @@ package com.example.proyek_android
 
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class EditForum : AppCompatActivity() {
     lateinit  var db : FirebaseFirestore
+    lateinit var sp : SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +34,8 @@ class EditForum : AppCompatActivity() {
 
         //database
         db = FirebaseFirestore.getInstance()
+        sp = getSharedPreferences("dataAkun", MODE_PRIVATE)
+        val userId = sp.getInt("spAkun", 0)
         //fetch data
         db.collection("tbForum").document("${idForum}")
             .get()
@@ -77,6 +81,7 @@ class EditForum : AppCompatActivity() {
                         }else {
                             val editedForum = Forum(
                                 idForum,
+                                userId,
                                 _tEditTitle.text.toString(),
                                 _tEditDescription.text.toString(),
                                 currentSelectionCategory,

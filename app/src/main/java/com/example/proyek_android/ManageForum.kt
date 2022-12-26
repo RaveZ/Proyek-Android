@@ -1,6 +1,7 @@
 package com.example.proyek_android
 
 import android.content.DialogInterface
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -18,8 +19,10 @@ class ManageForum : AppCompatActivity() {
     private lateinit var adapterF : adapterManageForum
 
     lateinit  var db : FirebaseFirestore
+    lateinit var sp : SharedPreferences
     private var arForum : MutableList<Forum> = mutableListOf()
     private lateinit var _rvManageForum: RecyclerView
+    private var userId : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +33,9 @@ class ManageForum : AppCompatActivity() {
         _rvManageForum = findViewById(R.id.rvManageForum)
         //database
         db = FirebaseFirestore.getInstance()
-        //fetch data
+
+        sp = getSharedPreferences("dataAkun", MODE_PRIVATE)
+        userId = sp.getInt("spAkun", 0)
 
 
 
@@ -44,15 +49,19 @@ class ManageForum : AppCompatActivity() {
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
-                    val forum = Forum(
-                        document.data.getValue("id").toString().toInt(),
-                        document.data.getValue("title").toString(),
-                        document.data.getValue("description").toString(),
-                        document.data.getValue("category").toString().toInt(),
-                        document.data.getValue("dateCreated").toString(),
-                        document.data.getValue("likeCount").toString().toInt()
-                    )
-                    arForum.add(forum)
+                    if(document.data.getValue("userId").toString().toInt() == userId){
+                        val forum = Forum(
+                            document.data.getValue("id").toString().toInt(),
+                            userId,
+                            document.data.getValue("title").toString(),
+                            document.data.getValue("description").toString(),
+                            document.data.getValue("category").toString().toInt(),
+                            document.data.getValue("dateCreated").toString(),
+                            document.data.getValue("likeCount").toString().toInt()
+                        )
+                        arForum.add(forum)
+                    }
+
                 }
                 adapterF = adapterManageForum(arForum)
 

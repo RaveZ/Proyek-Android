@@ -3,6 +3,7 @@ package com.example.proyek_android
 import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -18,16 +19,27 @@ class ManageForum : AppCompatActivity() {
 
     lateinit  var db : FirebaseFirestore
     private var arForum : MutableList<Forum> = mutableListOf()
+    private lateinit var _rvManageForum: RecyclerView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manage_forum)
 
 
         val _btnBackManageForum = findViewById<ImageView>(R.id.btnBackManageForum)
-        var _rvManageForum = findViewById<RecyclerView>(R.id.rvManageForum)
+        _rvManageForum = findViewById(R.id.rvManageForum)
         //database
         db = FirebaseFirestore.getInstance()
         //fetch data
+
+
+
+        _btnBackManageForum.setOnClickListener {
+            super.onBackPressed()
+        }
+    }
+
+    private fun TampilkanData(){
         db.collection("tbForum")
             .get()
             .addOnSuccessListener { result ->
@@ -56,9 +68,8 @@ class ManageForum : AppCompatActivity() {
                                 "DELETE",
                                 DialogInterface.OnClickListener{ dialog, which ->
                                     db.collection("tbForum").document("${pos}").delete()
-                                    arForum.removeAt(pos)
-                                    adapterF = adapterManageForum(arForum)
-                                    _rvManageForum.adapter = adapterF
+                                    arForum.clear()
+                                    TampilkanData()
                                 }
                             )
                             .setNegativeButton(
@@ -72,16 +83,11 @@ class ManageForum : AppCompatActivity() {
 
                 })
             }
-
-
-
-        _btnBackManageForum.setOnClickListener {
-            super.onBackPressed()
-        }
     }
-
-        override fun onStart() {
-            super.onStart()
-
-        }
+    override fun onStart() {
+        super.onStart()
+        arForum.clear()
+        TampilkanData()
+        Log.d("test", "haha")
+    }
 }

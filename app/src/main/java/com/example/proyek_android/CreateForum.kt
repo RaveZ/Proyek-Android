@@ -83,25 +83,13 @@ class CreateForum : AppCompatActivity() {
                                 db.collection("tbForum")
                                     .document(task.result.count.toString())
                                     .set(newForum)
-                                    val intent = Intent(this@CreateForum, Homepage::class.java)
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                    startActivity(intent)
+                                    finish()
                             } else {
                                 Log.d(TAG, "Count failed: ", task.getException())
                             }
                         }
                     }
             }
-
-
-
-
-
-
-
-
-
-
         }
 
         _btnBack.setOnClickListener {

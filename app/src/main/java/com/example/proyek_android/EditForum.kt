@@ -1,6 +1,7 @@
 package com.example.proyek_android
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -89,6 +90,7 @@ class EditForum : AppCompatActivity() {
                                     if(task.isSuccessful){
                                         Toast.makeText(this@EditForum, "Changes Applied", Toast.LENGTH_LONG).show()
                                         //back to last page
+                                        finish()
                                     }
 
                                 }

@@ -32,6 +32,9 @@
             android:name=".register"
             android:exported="false" />
         <activity
+            android:name=".EditForum"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

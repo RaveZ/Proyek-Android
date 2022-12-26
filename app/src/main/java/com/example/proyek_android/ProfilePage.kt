@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
@@ -51,7 +52,11 @@ class ProfilePage : AppCompatActivity() {
                 .setPositiveButton(
                     "Log out",
                     DialogInterface.OnClickListener{ dialog, which ->
+                        val editor = sp.edit()
+                        editor.putBoolean("loggedIn", false)
+                        editor.apply()
                         val intent = Intent(this@ProfilePage, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         startActivity(intent)
                     }
                 )
@@ -73,4 +78,6 @@ class ProfilePage : AppCompatActivity() {
 
 
     }
+
+
 }

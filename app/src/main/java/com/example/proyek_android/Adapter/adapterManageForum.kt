@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.proyek_android.DataClass.Forum
 import com.example.proyek_android.EditForum
 import com.example.proyek_android.R
+import com.example.proyek_android.postDetail
 
 class adapterManageForum(private val listForum : MutableList<Forum>) :
     RecyclerView.Adapter<adapterManageForum.ListViewHolder>(){
@@ -54,11 +56,19 @@ class adapterManageForum(private val listForum : MutableList<Forum>) :
         holder._btnDelete.setOnClickListener{
             onItemClickCallback.delData(position)
         }
+
+        holder._forumItem.setOnClickListener {
+            val intent = Intent(it.context, postDetail::class.java).apply {
+                putExtra(postDetail.dataUser, position.toString())
+            }
+            it.context.startActivity(intent)
+        }
     }
 
     inner class ListViewHolder(itemView : View) :RecyclerView.ViewHolder(itemView){
         var _btnDelete : ImageButton = itemView.findViewById(R.id.MF_btnDelete)
         var _btnEdit : ImageButton = itemView.findViewById(R.id.MF_btnEdit)
+        var _forumItem : ConstraintLayout = itemView.findViewById(R.id.MF_ForumItem)
 
         var _tvJudul : TextView = itemView.findViewById(R.id.MF_tvJudul)
         var _tvDeskripsi : TextView = itemView.findViewById(R.id.MF_tvDeskripsi)

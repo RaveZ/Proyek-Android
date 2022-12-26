@@ -21,6 +21,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         db = FirebaseFirestore.getInstance()
         sp = getSharedPreferences("dataAkun", MODE_PRIVATE)
+        val userId = sp.getBoolean("loggedIn",false)
+        if(userId){
+            val intent = Intent(this@MainActivity, Homepage::class.java)
+            finish()
+            startActivity(intent)
+        }
 
         var btnLogin = findViewById<Button>(R.id.btnLogin)
         var btnRegist = findViewById<Button>(R.id.btnRegister)
@@ -72,7 +78,9 @@ class MainActivity : AppCompatActivity() {
                                 }
                                 val editor = sp.edit()
                                 editor.putInt("spAkun", pos)
+                                editor.putBoolean("loggedIn", true)
                                 editor.apply()
+                                finish()
                                 startActivity(intent)
                             }else{
                                 warning.setText("password salah")

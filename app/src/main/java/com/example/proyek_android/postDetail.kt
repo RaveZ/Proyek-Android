@@ -24,6 +24,9 @@ class postDetail : AppCompatActivity() {
     lateinit var db: FirebaseFirestore
     private lateinit var dbRef: DatabaseReference
     var tanggal : String = DateHelper.getCurrentDate()
+    private var comList = ArrayList<comment>()
+    private lateinit var recView : RecyclerView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_detail)
@@ -37,10 +40,14 @@ class postDetail : AppCompatActivity() {
         var btnSubmitComment = findViewById<Button>(R.id.btnSubmitComment)
         var inputLayout = findViewById<TextInputLayout>(R.id.inputLayout)
         var inputComment = findViewById<TextInputEditText>(R.id.inputComment)
-        var recView = findViewById<RecyclerView>(R.id.recView)
-        var comList = ArrayList<comment>()
+
         val user = intent.getStringExtra(dataUser)
         db = FirebaseFirestore.getInstance()
+
+        recView = findViewById(R.id.recView)
+        recView.layoutManager = LinearLayoutManager(this)
+        val adapterP = adapterComment(comList)
+        recView.adapter = adapterP
 
         //perlu dapet id post yg di pilih user buat Post id / 1
         val docRef = db.collection("tbForum").document("1")
@@ -51,49 +58,55 @@ class postDetail : AppCompatActivity() {
                     tvTglPost.setText(document.data?.getValue("dateCreated").toString())
                     tvTitle.setText(document.data?.getValue("title").toString())
                     tvLike.setText(document.data?.getValue("likeCount").toString())
+                    getComment()
                 }
             }
-
-        //rec view comment
-        val countQuery = db.collection("tbComment").document("Post id?")
-            .collection("Comments").count()
-        countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                for (i in 0..task.result.count) {
-                    val ref = db.collection("tbComment").document("Post id?")
-                        .collection("Comments").document("Comment${i}")
-                    ref.get()
-                        .addOnSuccessListener { document ->
-                            if (document != null) {
-                                val com =
-                                    comment(
-                                        document.data?.getValue("nama").toString(),
-                                        document.data?.getValue("isi").toString(),
-                                        document.data?.getValue("tglComment").toString()
-                                    )
-                                comList.add(com)
-                            }
-                        }
-                }
-            } else {
-                Log.d(ContentValues.TAG, "Count failed: ", task.getException())
-            }
-        }
-        recView.layoutManager = LinearLayoutManager(this)
-        recView.adapter = adapterComment(comList)
 
         //button
         btnLike.setOnClickListener {
-            var like = tvLike.text.toString().toInt() + 1
-            tvLike.setText(like.toString())
-            db.collection("tbForum")
-                .document("1")
-                .update("likeCount",like.toString())
+            val cQuery = db.collection("tbLikes").count()
+            var jmlh = 0
+            cQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    jmlh = task.result.count.toString().toInt()
+                }
+            }
+            for(i in 0..jmlh){
+                val docRef = db.collection("tbLikes").document(i.toString())
+                docRef.get()
+                    .addOnSuccessListener { document ->
+                        if (document != null) {
+                            if(document.data?.getValue("idForum").toString() == "0" && document.data?.getValue("idUser").toString() == "0"){
+                                if(document.data?.getValue("hasLiked").toString() == "false"){
+                                    var like = tvLike.text.toString().toInt() + 1
+                                    tvLike.setText(like.toString())
+                                    db.collection("tbForum")
+                                        .document("1")
+                                        .update("likeCount",like.toString())
+                                    db.collection("tbLikes")
+                                        .document(i.toString())
+                                        .update("hasLiked","true")
+                                }else{
+                                    var like = tvLike.text.toString().toInt() - 1
+                                    tvLike.setText(like.toString())
+                                    db.collection("tbForum")
+                                        .document("1")
+                                        .update("likeCount",like.toString())
+                                    db.collection("tbLikes")
+                                        .document(i.toString())
+                                        .update("hasLiked","false")
+                                }
+                            }
+                        }
+                    }
+            }
         }
+
         btnAddComment.setOnClickListener{
             inputLayout.visibility = View.VISIBLE
             recView.visibility = View.GONE
         }
+
         btnSubmitComment.setOnClickListener {
             var commentData = comment(
                 user,
@@ -108,13 +121,44 @@ class postDetail : AppCompatActivity() {
                     db.collection("tbComment")
                         .document("Post id?")
                         .collection("Comments")
-                        .document("Comment${task.result.count}")
+                        .document("${task.result.count}")
                         .set(commentData)
+                    getComment()
                     inputLayout.visibility = View.GONE
-                    recView.visibility = View.VISIBLE
+                    inputComment.setText("")
                 } else {
                     Log.d(ContentValues.TAG, "Count failed: ", task.getException())
                 }
+            }
+            recView.visibility = View.VISIBLE
+        }
+    }
+
+    private fun getComment(){
+        val adapterP = adapterComment(comList)
+        recView.adapter = adapterP
+        val cntQuery = db.collection("tbComment").document("Post id?")
+            .collection("Comments").count()
+        cntQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                comList.clear()
+                for (i in 0..task.result.count) {
+                    val ref = db.collection("tbComment").document("Post id?")
+                        .collection("Comments").document("${i}")
+                    ref.get()
+                        .addOnSuccessListener { document ->
+                            if (document != null) {
+                                val com =
+                                    comment(
+                                        document.data?.getValue("nama").toString(),
+                                        document.data?.getValue("isi").toString(),
+                                        document.data?.getValue("tglComment").toString()
+                                    )
+                                comList.add(com)
+                            }
+                        }
+                }
+                recView.adapter!!.notifyDataSetChanged()
             }
         }
     }

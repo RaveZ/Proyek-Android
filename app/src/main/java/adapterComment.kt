@@ -29,7 +29,6 @@ class adapterComment (
         holder.userName.setText(comment.nama)
         holder.isiComment.setText(comment.isi)
     }
-
     override fun getItemCount(): Int {
         return listComment.size
     }

@@ -50,7 +50,7 @@ class postDetail : AppCompatActivity() {
         recView.adapter = adapterP
 
         //perlu dapet id post yg di pilih user buat Post id / 1
-        val docRef = db.collection("tbForum").document("1")
+        val docRef = db.collection("tbForum").document("${user}")
         docRef.get()
             .addOnSuccessListener { document ->
                 if (document != null) {

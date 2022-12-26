@@ -58,6 +58,7 @@ class postDetail : AppCompatActivity() {
                     tvTglPost.setText(document.data?.getValue("dateCreated").toString())
                     tvTitle.setText(document.data?.getValue("title").toString())
                     tvLike.setText(document.data?.getValue("likeCount").toString())
+                    comList.sortByDescending{ it.id}
                     recView.layoutManager = LinearLayoutManager(this)
                     val adapterP = adapterComment(comList)
                     recView.adapter = adapterP
@@ -112,16 +113,17 @@ class postDetail : AppCompatActivity() {
         }
 
         btnSubmitComment.setOnClickListener {
-            var commentData = comment(
-                user,
-                inputComment.text.toString(),
-                tanggal
-            )
             val countQuery = db.collection("tbComment")
                 .document("Post id?")
                 .collection("Comments").count()
             countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    var commentData = comment(
+                        task.result.count.toInt(),
+                        user,
+                        inputComment.text.toString(),
+                        tanggal
+                    )
                     db.collection("tbComment")
                         .document("Post id?")
                         .collection("Comments")
@@ -130,7 +132,7 @@ class postDetail : AppCompatActivity() {
                     inputLayout.visibility = View.GONE
                     inputComment.setText("")
                     getComment()
-                    recView.adapter!!.notifyItemChanged(task.result.count.toString().toInt())
+                    recView.adapter?.notifyItemChanged(task.result.count.toInt())
                 } else {
                     Log.d(ContentValues.TAG, "Count failed: ", task.getException())
                 }
@@ -144,26 +146,26 @@ class postDetail : AppCompatActivity() {
             .collection("Comments").count()
         cntQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                comList.clear()
                 for (i in 0..task.result.count) {
-//                    val ref = db.collection("tbComment").document("Post id?")
-//                        .collection("Comments").document("${i}")
+                    comList.clear()
                     val ref = db.collection("tbComment").document("Post id?")
                         .collection("Comments").document("${i}")
                     ref.get()
                         .addOnSuccessListener { document ->
                             if (document != null) {
-//                                if(document.data?.getValue("nama") != null ||document.data?.getValue("isi")!=null ){
+                                if(document.data?.getValue("id") != null){
                                     val com =
                                         comment(
+                                            document.data?.getValue("id").toString().toInt(),
                                             document.data?.getValue("nama").toString(),
                                             document.data?.getValue("isi").toString(),
                                             document.data?.getValue("tglComment").toString()
                                         )
                                     comList.add(com)
-                                    recView.adapter!!.notifyItemChanged(i.toString().toInt())
-//                                }
-
+                                    comList.sortByDescending{it.id}
+//                                    recView.adapter?.notifyItemChanged(i.toInt())
+                                    recView.adapter?.notifyDataSetChanged()
+                                }
                             }
                         }
                 }

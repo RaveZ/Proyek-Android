@@ -26,7 +26,6 @@ class postDetail : AppCompatActivity() {
     var tanggal : String = DateHelper.getCurrentDate()
     private var comList = ArrayList<comment>()
     private lateinit var recView : RecyclerView
-    private var loading = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_detail)
@@ -37,13 +36,13 @@ class postDetail : AppCompatActivity() {
         var tvIsi = findViewById<TextView>(R.id.tvIsiPost)
         var tvTglPost = findViewById<TextView>(R.id.tvTanggal)
         var tvLike = findViewById<TextView>(R.id.tvJumlahLike)
-        var tvWarningP = findViewById<TextView>(R.id.tvWarningL)
         var btnSubmitComment = findViewById<Button>(R.id.btnSubmitComment)
         var inputLayout = findViewById<TextInputLayout>(R.id.inputLayout)
         var inputComment = findViewById<TextInputEditText>(R.id.inputComment)
-        var btnShowComment = findViewById<ImageButton>(R.id.btnShowComment)
+//        var btnShowComment = findViewById<ImageButton>(R.id.btnShowComment)
         val user = intent.getStringExtra(dataUser)
         db = FirebaseFirestore.getInstance()
+
 
         recView = findViewById(R.id.recView)
         recView.layoutManager = LinearLayoutManager(this)
@@ -59,8 +58,11 @@ class postDetail : AppCompatActivity() {
                     tvTglPost.setText(document.data?.getValue("dateCreated").toString())
                     tvTitle.setText(document.data?.getValue("title").toString())
                     tvLike.setText(document.data?.getValue("likeCount").toString())
+                    recView.layoutManager = LinearLayoutManager(this)
+                    val adapterP = adapterComment(comList)
                     recView.adapter = adapterP
                     getComment()
+                    recView.visibility = View.VISIBLE
                 }
             }
 
@@ -104,12 +106,6 @@ class postDetail : AppCompatActivity() {
             }
         }
 
-        btnShowComment.setOnClickListener {
-            recView.adapter!!.notifyDataSetChanged()
-            recView.visibility = View.VISIBLE
-            btnAddComment.visibility = View.VISIBLE
-        }
-
         btnAddComment.setOnClickListener{
             inputLayout.visibility = View.VISIBLE
             recView.visibility = View.GONE
@@ -134,11 +130,11 @@ class postDetail : AppCompatActivity() {
                     inputLayout.visibility = View.GONE
                     inputComment.setText("")
                     getComment()
+                    recView.adapter!!.notifyItemChanged(task.result.count.toString().toInt())
                 } else {
                     Log.d(ContentValues.TAG, "Count failed: ", task.getException())
                 }
             }
-            recView.adapter!!.notifyDataSetChanged()
             recView.visibility = View.VISIBLE
         }
     }
@@ -150,6 +146,8 @@ class postDetail : AppCompatActivity() {
             if (task.isSuccessful) {
                 comList.clear()
                 for (i in 0..task.result.count) {
+//                    val ref = db.collection("tbComment").document("Post id?")
+//                        .collection("Comments").document("${i}")
                     val ref = db.collection("tbComment").document("Post id?")
                         .collection("Comments").document("${i}")
                     ref.get()
@@ -163,7 +161,9 @@ class postDetail : AppCompatActivity() {
                                             document.data?.getValue("tglComment").toString()
                                         )
                                     comList.add(com)
+                                    recView.adapter!!.notifyItemChanged(i.toString().toInt())
 //                                }
+
                             }
                         }
                 }

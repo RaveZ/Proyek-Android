@@ -2,19 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/bottomborder">
 
     <TextView
         android:id="@+id/comUname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10px"
         android:text="username" />
 
     <TextView
         android:id="@+id/isiComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="isi comment" />
+        android:text="isi comment"
+        android:layout_marginBottom="10px"
+        android:layout_marginLeft="10px"/>
 
 
 </LinearLayout>

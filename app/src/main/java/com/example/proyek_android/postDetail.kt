@@ -26,7 +26,7 @@ class postDetail : AppCompatActivity() {
     var tanggal : String = DateHelper.getCurrentDate()
     private var comList = ArrayList<comment>()
     private lateinit var recView : RecyclerView
-
+    private var loading = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_detail)
@@ -37,10 +37,11 @@ class postDetail : AppCompatActivity() {
         var tvIsi = findViewById<TextView>(R.id.tvIsiPost)
         var tvTglPost = findViewById<TextView>(R.id.tvTanggal)
         var tvLike = findViewById<TextView>(R.id.tvJumlahLike)
+        var tvWarningP = findViewById<TextView>(R.id.tvWarningL)
         var btnSubmitComment = findViewById<Button>(R.id.btnSubmitComment)
         var inputLayout = findViewById<TextInputLayout>(R.id.inputLayout)
         var inputComment = findViewById<TextInputEditText>(R.id.inputComment)
-
+        var btnShowComment = findViewById<ImageButton>(R.id.btnShowComment)
         val user = intent.getStringExtra(dataUser)
         db = FirebaseFirestore.getInstance()
 
@@ -58,6 +59,7 @@ class postDetail : AppCompatActivity() {
                     tvTglPost.setText(document.data?.getValue("dateCreated").toString())
                     tvTitle.setText(document.data?.getValue("title").toString())
                     tvLike.setText(document.data?.getValue("likeCount").toString())
+                    recView.adapter = adapterP
                     getComment()
                 }
             }
@@ -102,6 +104,12 @@ class postDetail : AppCompatActivity() {
             }
         }
 
+        btnShowComment.setOnClickListener {
+            recView.adapter!!.notifyDataSetChanged()
+            recView.visibility = View.VISIBLE
+            btnAddComment.visibility = View.VISIBLE
+        }
+
         btnAddComment.setOnClickListener{
             inputLayout.visibility = View.VISIBLE
             recView.visibility = View.GONE
@@ -123,20 +131,19 @@ class postDetail : AppCompatActivity() {
                         .collection("Comments")
                         .document("${task.result.count}")
                         .set(commentData)
-                    getComment()
                     inputLayout.visibility = View.GONE
                     inputComment.setText("")
+                    getComment()
                 } else {
                     Log.d(ContentValues.TAG, "Count failed: ", task.getException())
                 }
             }
+            recView.adapter!!.notifyDataSetChanged()
             recView.visibility = View.VISIBLE
         }
     }
 
     private fun getComment(){
-        val adapterP = adapterComment(comList)
-        recView.adapter = adapterP
         val cntQuery = db.collection("tbComment").document("Post id?")
             .collection("Comments").count()
         cntQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
@@ -148,19 +155,21 @@ class postDetail : AppCompatActivity() {
                     ref.get()
                         .addOnSuccessListener { document ->
                             if (document != null) {
-                                val com =
-                                    comment(
-                                        document.data?.getValue("nama").toString(),
-                                        document.data?.getValue("isi").toString(),
-                                        document.data?.getValue("tglComment").toString()
-                                    )
-                                comList.add(com)
+//                                if(document.data?.getValue("nama") != null ||document.data?.getValue("isi")!=null ){
+                                    val com =
+                                        comment(
+                                            document.data?.getValue("nama").toString(),
+                                            document.data?.getValue("isi").toString(),
+                                            document.data?.getValue("tglComment").toString()
+                                        )
+                                    comList.add(com)
+//                                }
                             }
                         }
                 }
-                recView.adapter!!.notifyDataSetChanged()
             }
         }
+//        return false
     }
 
     companion object{

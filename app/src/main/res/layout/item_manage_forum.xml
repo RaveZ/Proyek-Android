@@ -7,8 +7,8 @@
 
     <TextView
         android:id="@+id/MF_tvJudul"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="298dp"
+        android:layout_height="19dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
@@ -17,9 +17,40 @@
 
     <TextView
         android:id="@+id/MF_tvDeskripsi"
+        android:layout_width="298dp"
+        android:layout_height="96dp"
+        android:layout_marginTop="7dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="@+id/MF_tvJudul"
+        app:layout_constraintTop_toBottomOf="@+id/MF_tvJudul" />
+
+    <ImageButton
+        android:id="@+id/MF_btnEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/MF_btnDelete"
+        app:layout_constraintStart_toStartOf="@+id/MF_btnDelete"
+        app:srcCompat="@drawable/edit" />
+
+    <ImageButton
+        android:id="@+id/MF_btnDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/delete" />
+
+    <TextView
+        android:id="@+id/MF_date"
+        android:layout_width="80dp"
+        android:layout_height="13dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="10dp"
         android:text="TextView"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="44dp" />
+        android:textSize="8sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

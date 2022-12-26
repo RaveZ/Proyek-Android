@@ -64,12 +64,12 @@ class MainActivity : AppCompatActivity() {
                             if(etPassword.text.toString() == document.data?.getValue("pass").toString()){
 //                                warning.setText("data ditemukan")
 //                                warning.visibility=View.VISIBLE
-                                val intent = Intent(this@MainActivity, postDetail::class.java).apply {
-                                    putExtra(postDetail.dataUser, pos.toString())
-                                }
-//                                val intent = Intent(this@MainActivity, Homepage::class.java).apply {
+//                                val intent = Intent(this@MainActivity, postDetail::class.java).apply {
 //                                    putExtra(postDetail.dataUser, pos.toString())
 //                                }
+                                val intent = Intent(this@MainActivity, Homepage::class.java).apply {
+                                    putExtra(postDetail.dataUser, pos.toString())
+                                }
                                 val editor = sp.edit()
                                 editor.putInt("spAkun", pos)
                                 editor.apply()

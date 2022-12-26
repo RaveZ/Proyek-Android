@@ -64,7 +64,8 @@ class ProfilePage : AppCompatActivity() {
         }
 
         _btnCreatedForum.setOnClickListener{
-
+            val intent = Intent(this@ProfilePage, ManageForum::class.java)
+            startActivity(intent)
         }
         _btnBack.setOnClickListener{
             super.onBackPressed()

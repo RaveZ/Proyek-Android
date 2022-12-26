@@ -1,6 +1,7 @@
 package com.example.proyek_android
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -72,6 +73,7 @@ class CreateForum : AppCompatActivity() {
                         countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
                             if (task.isSuccessful) {
                                 val newForum = Forum(
+                                    task.result.count.toString().toInt(),
                                     _tTitle.text.toString(),
                                     _tDescription.text.toString(),
                                     selectedCategory,
@@ -81,6 +83,9 @@ class CreateForum : AppCompatActivity() {
                                 db.collection("tbForum")
                                     .document(task.result.count.toString())
                                     .set(newForum)
+                                    val intent = Intent(this@CreateForum, Homepage::class.java)
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                    startActivity(intent)
                             } else {
                                 Log.d(TAG, "Count failed: ", task.getException())
                             }

@@ -18,7 +18,7 @@ class EditForum : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_forum)
 
-        var idForum = 0
+        var idForum = intent.getIntExtra("idForum", 0)
 
         //var
         var Categories = ArrayList<String>()
@@ -75,6 +75,7 @@ class EditForum : AppCompatActivity() {
                             Toast.makeText(this@EditForum, "Title/Description are Empty!", Toast.LENGTH_LONG).show()
                         }else {
                             val editedForum = Forum(
+                                idForum,
                                 _tEditTitle.text.toString(),
                                 _tEditDescription.text.toString(),
                                 currentSelectionCategory,

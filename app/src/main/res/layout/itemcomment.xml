@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/bottomborder">
 
-    <TextView
-        android:id="@+id/comUname"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10px"
-        android:text="username" />
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/account" />
+
+        <TextView
+            android:id="@+id/comUname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10px"
+            android:text="username" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/isiComment"
@@ -19,6 +32,13 @@
         android:text="isi comment"
         android:layout_marginBottom="10px"
         android:layout_marginLeft="10px"/>
+
+    <TextView
+        android:id="@+id/tanggal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15px"
+        android:text="tanggal" />
 
 
 </LinearLayout>

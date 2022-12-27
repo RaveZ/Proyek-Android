@@ -19,14 +19,19 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:srcCompat="@drawable/heart" />
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:srcCompat="@drawable/account"
+                android:layout_marginLeft="10px" />
 
             <TextView
                 android:id="@+id/userName"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textSize="35px"
+                android:padding="10px"
+                />
         </LinearLayout>
 
         <TextView
@@ -49,7 +54,7 @@
             android:id="@+id/tvTanggal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10px"/>
+            android:layout_marginLeft="10px" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -100,7 +105,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="300px"
+            android:layout_height="200px"
             android:id="@+id/inputComment"
             android:hint="Tambahkan komentar" />
 

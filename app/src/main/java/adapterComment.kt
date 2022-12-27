@@ -15,6 +15,7 @@ class adapterComment (
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         var userName : TextView = itemView.findViewById(R.id.comUname)
         var isiComment : TextView = itemView.findViewById(R.id.isiComment)
+        var tanggal : TextView = itemView.findViewById(R.id.tanggal)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
@@ -28,6 +29,7 @@ class adapterComment (
         var comment = listComment[position]
         holder.userName.setText(comment.nama)
         holder.isiComment.setText(comment.isi)
+        holder.tanggal.setText(comment.tglComment)
     }
     override fun getItemCount(): Int {
         return listComment.size

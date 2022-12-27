@@ -39,7 +39,7 @@ class postDetail : AppCompatActivity() {
         var btnSubmitComment = findViewById<Button>(R.id.btnSubmitComment)
         var inputLayout = findViewById<TextInputLayout>(R.id.inputLayout)
         var inputComment = findViewById<TextInputEditText>(R.id.inputComment)
-//        var btnShowComment = findViewById<ImageButton>(R.id.btnShowComment)
+        var tvUname = findViewById<TextView>(R.id.userName)
         val user = intent.getStringExtra(dataUser)
         db = FirebaseFirestore.getInstance()
 
@@ -54,6 +54,7 @@ class postDetail : AppCompatActivity() {
         docRef.get()
             .addOnSuccessListener { document ->
                 if (document != null) {
+                    tvUname.setText("${user}")
                     tvIsi.setText(document.data?.getValue("description").toString())
                     tvTglPost.setText(document.data?.getValue("dateCreated").toString())
                     tvTitle.setText(document.data?.getValue("title").toString())

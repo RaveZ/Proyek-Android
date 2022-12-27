@@ -69,11 +69,11 @@
         android:layout_width="112dp"
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="68dp"
+        android:layout_marginEnd="60dp"
         android:text="Newest"
         android:textSize="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/categoryFilter" />
 
     <Button
         android:id="@+id/HP_btnTrending"
@@ -86,27 +86,16 @@
         app:layout_constraintEnd_toStartOf="@+id/HP_btnNewest"
         app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/categoryFilter" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+    <Spinner
+        android:id="@+id/categoryFilter"
         android:layout_width="271dp"
         android:layout_height="55dp"
         android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout5">
-
-        <AutoCompleteTextView
-            android:id="@+id/autoCompleteTextView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Pick a Category"
-            android:inputType="none"
-            android:textSize="12dp" />
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout5"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,7 +22,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class postDetail : AppCompatActivity() {
     lateinit var db: FirebaseFirestore
-    private lateinit var dbRef: DatabaseReference
     var tanggal : String = DateHelper.getCurrentDate()
     private var comList = ArrayList<comment>()
     private lateinit var recView : RecyclerView
@@ -40,21 +39,28 @@ class postDetail : AppCompatActivity() {
         var inputLayout = findViewById<TextInputLayout>(R.id.inputLayout)
         var inputComment = findViewById<TextInputEditText>(R.id.inputComment)
         var tvUname = findViewById<TextView>(R.id.userName)
-        val user = intent.getStringExtra(dataUser)
         db = FirebaseFirestore.getInstance()
-
+        val idPost = intent.getStringExtra(dataUser)
 
         recView = findViewById(R.id.recView)
         recView.layoutManager = LinearLayoutManager(this)
         val adapterP = adapterComment(comList)
         recView.adapter = adapterP
 
+        var isiUname = ""
+        val uname = db.collection("tbUserDetail").document("${idPost}")
+        uname.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    isiUname = document.data?.getValue("nama").toString()
+                    tvUname.setText("${isiUname}")
+                }
+            }
         //perlu dapet id post yg di pilih user buat Post id / 1
-        val docRef = db.collection("tbForum").document("${user}")
+        val docRef = db.collection("tbForum").document("${idPost}")
         docRef.get()
             .addOnSuccessListener { document ->
                 if (document != null) {
-                    tvUname.setText("${user}")
                     tvIsi.setText(document.data?.getValue("description").toString())
                     tvTglPost.setText(document.data?.getValue("dateCreated").toString())
                     tvTitle.setText(document.data?.getValue("title").toString())
@@ -115,18 +121,18 @@ class postDetail : AppCompatActivity() {
 
         btnSubmitComment.setOnClickListener {
             val countQuery = db.collection("tbComment")
-                .document("Post id?")
+                .document("${idPost}")
                 .collection("Comments").count()
             countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     var commentData = comment(
                         task.result.count.toInt(),
-                        user,
+                        isiUname,
                         inputComment.text.toString(),
                         tanggal
                     )
                     db.collection("tbComment")
-                        .document("Post id?")
+                        .document("${idPost}")
                         .collection("Comments")
                         .document("${task.result.count}")
                         .set(commentData)
@@ -143,13 +149,14 @@ class postDetail : AppCompatActivity() {
     }
 
     private fun getComment(){
-        val cntQuery = db.collection("tbComment").document("Post id?")
+        val idPost = intent.getStringExtra(dataUser)
+        val cntQuery = db.collection("tbComment").document("${idPost}")
             .collection("Comments").count()
         cntQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 for (i in 0..task.result.count) {
                     comList.clear()
-                    val ref = db.collection("tbComment").document("Post id?")
+                    val ref = db.collection("tbComment").document("${idPost}")
                         .collection("Comments").document("${i}")
                     ref.get()
                         .addOnSuccessListener { document ->

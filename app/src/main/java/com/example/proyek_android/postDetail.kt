@@ -2,6 +2,7 @@ package com.example.proyek_android
 
 import adapterComment
 import android.content.ContentValues
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.proyek_android.DataClass.DataRegist
 import com.example.proyek_android.DataClass.comment
+import com.example.proyek_android.DataClass.like
 import com.example.proyek_android.Helper.DateHelper
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -25,6 +27,7 @@ class postDetail : AppCompatActivity() {
     var tanggal : String = DateHelper.getCurrentDate()
     private var comList = ArrayList<comment>()
     private lateinit var recView : RecyclerView
+    lateinit var sp : SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_detail)
@@ -47,13 +50,21 @@ class postDetail : AppCompatActivity() {
         val adapterP = adapterComment(comList)
         recView.adapter = adapterP
 
-        var isiUname = ""
+        var userName = ""
+        sp = getSharedPreferences("dataAkun", MODE_PRIVATE)
+        val userId = sp.getInt("spAkun", 0)
+        db.collection("tbUserDetail").document("${userId}")
+            .get()
+            .addOnSuccessListener { result ->
+                userName= result.data?.getValue("nama").toString()
+            }
+        var unamePost = ""
         val uname = db.collection("tbUserDetail").document("${idPost}")
         uname.get()
             .addOnSuccessListener { document ->
                 if (document != null) {
-                    isiUname = document.data?.getValue("nama").toString()
-                    tvUname.setText("${isiUname}")
+                    unamePost = document.data?.getValue("nama").toString()
+                    tvUname.setText("${unamePost}")
                 }
             }
         //perlu dapet id post yg di pilih user buat Post id / 1
@@ -81,37 +92,71 @@ class postDetail : AppCompatActivity() {
             cQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     jmlh = task.result.count.toString().toInt()
+                }else{
+//                        var like = tvLike.text.toString().toInt() + 1
+//                        val data = like(
+//                            true.toString(),
+//                            idPost.toString(),
+//                            userName
+//                        )
+//                        db.collection("tbForum")
+//                            .document("${idPost}")
+//                            .update("likeCount", like.toString())
+//                        db.collection("tbLikes")
+//                            .document("0")
+//                            .set(data)
                 }
             }
+            var found = false
             for(i in 0..jmlh){
                 val docRef = db.collection("tbLikes").document(i.toString())
                 docRef.get()
                     .addOnSuccessListener { document ->
                         if (document != null) {
-                            if(document.data?.getValue("idForum").toString() == "0" && document.data?.getValue("idUser").toString() == "0"){
-                                if(document.data?.getValue("hasLiked").toString() == "false"){
+                            if(document.data?.getValue("idForum").toString() == "${idPost}" && document.data?.getValue("idUser").toString() == "${userName}") {
+                                if (document.data?.getValue("hasLiked").toString() == "false") {
+                                    tvUname.setText("masuk false")
                                     var like = tvLike.text.toString().toInt() + 1
                                     tvLike.setText(like.toString())
                                     db.collection("tbForum")
-                                        .document("1")
-                                        .update("likeCount",like.toString())
+                                        .document("${idPost}")
+                                        .update("likeCount", like.toString())
                                     db.collection("tbLikes")
                                         .document(i.toString())
-                                        .update("hasLiked","true")
-                                }else{
+                                        .update("hasLiked", "true")
+                                    found = true
+                                } else if (document.data?.getValue("hasLiked").toString() == "true"){
                                     var like = tvLike.text.toString().toInt() - 1
-                                    tvLike.setText(like.toString())
-                                    db.collection("tbForum")
-                                        .document("1")
-                                        .update("likeCount",like.toString())
-                                    db.collection("tbLikes")
-                                        .document(i.toString())
-                                        .update("hasLiked","false")
+                                    tvUname.setText("masuk true")
+                                    if(like >= 0) {
+                                        tvLike.setText(like.toString())
+                                        db.collection("tbForum")
+                                            .document("${idPost}")
+                                            .update("likeCount", like.toString())
+                                        db.collection("tbLikes")
+                                            .document(i.toString())
+                                            .update("hasLiked", "false")
+                                    }
+                                    found = true
                                 }
                             }
                         }
                     }
             }
+                    if (found == false){
+                        var like = tvLike.text.toString().toInt() + 1
+                        val data = like(
+                            true.toString(),
+                            idPost.toString(),
+                            userName
+                        )
+                        db.collection("tbForum")
+                            .document("${idPost}")
+                            .update("likeCount", like.toString())
+                        db.collection("tbLikes")
+                            .document(jmlh.toString())
+                            .set(data)
+                    }
         }
 
         btnAddComment.setOnClickListener{
@@ -127,7 +172,7 @@ class postDetail : AppCompatActivity() {
                 if (task.isSuccessful) {
                     var commentData = comment(
                         task.result.count.toInt(),
-                        isiUname,
+                        userName,
                         inputComment.text.toString(),
                         tanggal
                     )

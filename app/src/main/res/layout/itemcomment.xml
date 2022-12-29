@@ -37,8 +37,9 @@
         android:id="@+id/tanggal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="15px"
-        android:text="tanggal" />
+        android:text="tanggal"
+        android:textAlignment="textEnd"
+        android:textSize="15px" />
 
 
 </LinearLayout>

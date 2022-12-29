@@ -128,15 +128,15 @@ class Homepage : AppCompatActivity() {
                 }
             }
 
-        arAllForum.add(Forum(0, 0,"tita", "hello", 1, "2022/12/23 11:12:05", 0,))
-        arAllForum.add(Forum(1, 0,"hm", "hm", 3, "2022/12/26 20:03:35", 5,))
-        arAllForum.add(Forum(2, 0,"test", "gm", 0, "2022/12/26 20:54:01", 2,))
-        arAllForum.add(Forum(2, 0,"test", "gm", 0, "2022/12/26 20:54:01", 2,))
-        arCategory.add("Sport")
-        arCategory.add("Gaming")
-        arCategory.add("Healthy Life")
-        arCategory.add("Movies")
-        arCategory.add("Art")
+//        arAllForum.add(Forum(0, 0,"tita", "hello", 1, "2022/12/23 11:12:05", 0,))
+//        arAllForum.add(Forum(1, 0,"hm", "hm", 3, "2022/12/26 20:03:35", 5,))
+//        arAllForum.add(Forum(2, 0,"test", "gm", 0, "2022/12/26 20:54:01", 2,))
+//        arAllForum.add(Forum(2, 0,"test", "gm", 0, "2022/12/26 20:54:01", 2,))
+//        arCategory.add("Sport")
+//        arCategory.add("Gaming")
+//        arCategory.add("Healthy Life")
+//        arCategory.add("Movies")
+//        arCategory.add("Art")
 
         //menampilkan data
         val _categoryFilter = findViewById<Spinner>(R.id.categoryFilter)

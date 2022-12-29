@@ -118,10 +118,7 @@ class postDetail : AppCompatActivity() {
                     for (document in result) {
                         if(document.data.getValue("idForum").toString().equals(idPost) ){
                             if(document.data.getValue("idUser").toString().equals(userId.toString())){
-<<<<<<< Updated upstream
-=======
 //                                Toast.makeText(this@postDetail, "nice", Toast.LENGTH_LONG).show()
->>>>>>> Stashed changes
                                 dbHasCreated = true
                                 if(document.data.getValue("hasLiked") == false){
                                     //like

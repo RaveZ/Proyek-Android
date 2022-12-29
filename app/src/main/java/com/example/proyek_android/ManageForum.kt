@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.proyek_android.Adapter.adapterManageForum
 import com.example.proyek_android.DataClass.Forum
+import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 
 class ManageForum : AppCompatActivity() {
 
@@ -76,6 +78,19 @@ class ManageForum : AppCompatActivity() {
                             .setPositiveButton(
                                 "DELETE",
                                 DialogInterface.OnClickListener{ dialog, which ->
+                                    Toast.makeText(this@ManageForum, "${dForum.id}", Toast.LENGTH_LONG).show()
+                                    val countQuery = db.collection("tbComment")
+                                        .document("${dForum.id}")
+                                        .collection("Comments").count()
+                                    countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+                                        if (task.isSuccessful) {
+                                            for(i in 0..task.result.count){
+                                                db.collection("tbComment").document("${dForum.id}")
+                                                    .collection("Comments").document("${i}").delete()
+                                            }
+                                            db.collection("tbComment").document("${dForum.id}").delete()
+                                        }
+                                    }
                                     db.collection("tbForum").document("${dForum.id}").delete()
                                     db.collection("tbLikes")
                                         .get()

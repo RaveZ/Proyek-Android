@@ -118,15 +118,38 @@ class Homepage : AppCompatActivity() {
                     val data = Forum(document.data.getValue("id").toString().toInt(), document.data.getValue("userId").toString().toInt(), document.data.getValue("title").toString(), document.data.getValue("description").toString(), document.data.getValue("category").toString().toInt(), document.data.getValue("dateCreated").toString(), document.data.getValue("likeCount").toString().toInt())
                     arAllForum.add(data)
                 }
+                db.collection("Categories")
+                    .get()
+                    .addOnSuccessListener { result ->
+                        for (document in result) {
+                            arCategory.add(document.data.getValue("Category").toString())
+                        }
+                        val _categoryFilter = findViewById<Spinner>(R.id.categoryFilter)
+                        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, arCategory)
+                        _categoryFilter.adapter = adapter
+                        _categoryFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                            override fun onNothingSelected(p0: AdapterView<*>?) {
+                            }
+
+                            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                                sortData(_categoryFilter.selectedItemPosition)
+                                showData(_rvForum)
+                            }
+                        }
+                        sortData()
+                        showData(_rvForum)
+                        _btnNewest.setOnClickListener {
+                            sortData(false)
+                            showData(_rvForum)
+                        }
+                        _btnTrending.setOnClickListener {
+                            sortData(true)
+                            showData(_rvForum)
+                        }
+                    }
             }
 
-        db.collection("Categories")
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    arCategory.add(document.data.getValue("Category").toString())
-                }
-            }
+
 
 //        arAllForum.add(Forum(0, 0,"tita", "hello", 1, "2022/12/23 11:12:05", 0,))
 //        arAllForum.add(Forum(1, 0,"hm", "hm", 3, "2022/12/26 20:03:35", 5,))
@@ -138,29 +161,7 @@ class Homepage : AppCompatActivity() {
 //        arCategory.add("Movies")
 //        arCategory.add("Art")
 
-        //menampilkan data
-        val _categoryFilter = findViewById<Spinner>(R.id.categoryFilter)
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, arCategory)
-        _categoryFilter.adapter = adapter
-        _categoryFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-            }
-
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                sortData(_categoryFilter.selectedItemPosition)
-                showData(_rvForum)
-            }
-        }
-        sortData()
-        showData(_rvForum)
-        _btnNewest.setOnClickListener {
-            sortData(false)
-            showData(_rvForum)
-        }
-        _btnTrending.setOnClickListener {
-            sortData(true)
-            showData(_rvForum)
-        }
+        //menampilkan dat
         _rvForum.adapter = adapterForum(arForum)
 
         //Toast.makeText(this@Homepage, "${userId}", Toast.LENGTH_LONG).show()

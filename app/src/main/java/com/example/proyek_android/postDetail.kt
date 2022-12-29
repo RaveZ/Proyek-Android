@@ -118,7 +118,6 @@ class postDetail : AppCompatActivity() {
                     for (document in result) {
                         if(document.data.getValue("idForum").toString().equals(idPost) ){
                             if(document.data.getValue("idUser").toString().equals(userId.toString())){
-                                Toast.makeText(this@postDetail, "nice", Toast.LENGTH_LONG).show()
                                 dbHasCreated = true
                                 if(document.data.getValue("hasLiked") == false){
                                     //like

@@ -107,7 +107,7 @@ class postDetail : AppCompatActivity() {
                                         tvLike.setText(like.toString())
                                         db.collection("tbForum")
                                             .document("${idPost}")
-                                            .update("likeCount", like.toString())
+                                            .update("likeCount", like)
 //                                        db.collection("tbLikes")
 //                                            .document(i.toString())
 //                                            .update("hasLiked", "false")
@@ -127,7 +127,7 @@ class postDetail : AppCompatActivity() {
                                         tvLike.setText(like.toString())
                                         db.collection("tbForum")
                                             .document("${idPost}")
-                                            .update("likeCount", like.toString())
+                                            .update("likeCount", like)
 //                                        db.collection("tbLikes")
 //                                            .document(i.toString())
 //                                            .update("hasLiked", "false")
@@ -156,7 +156,7 @@ class postDetail : AppCompatActivity() {
                             tvLike.setText(like.toString())
                             db.collection("tbForum")
                                 .document("${idPost}")
-                                .update("likeCount", like.toString())
+                                .update("likeCount", like)
 
                             val data = like(
                                 true,

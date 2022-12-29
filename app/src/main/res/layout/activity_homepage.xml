@@ -48,23 +48,24 @@
         android:id="@+id/HP_btnNewest"
         android:layout_width="112dp"
         android:layout_height="40dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="148dp"
+        android:layout_marginEnd="76dp"
         android:text="Newest"
         android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/HP_btnTrending"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/HP_btnTrending"
         app:layout_constraintTop_toBottomOf="@+id/categoryFilter" />
 
     <Button
         android:id="@+id/HP_btnTrending"
         android:layout_width="112dp"
         android:layout_height="40dp"
+        android:layout_marginStart="63dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="28dp"
         android:text="Trending"
         android:textSize="12dp"
-        app:layout_constraintEnd_toStartOf="@+id/HP_btnNewest"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/categoryFilter" />
 

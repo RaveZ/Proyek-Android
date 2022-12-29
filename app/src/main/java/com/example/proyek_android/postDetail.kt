@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -44,6 +45,7 @@ class postDetail : AppCompatActivity() {
         var tvUname = findViewById<TextView>(R.id.userName)
         db = FirebaseFirestore.getInstance()
         val idPost = intent.getStringExtra(dataUser)
+
 
         recView = findViewById(R.id.recView)
         recView.layoutManager = LinearLayoutManager(this)
@@ -93,6 +95,7 @@ class postDetail : AppCompatActivity() {
                 if (task.isSuccessful) {
                     jmlh = task.result.count.toString().toInt()
                 }else{
+
 //                        var like = tvLike.text.toString().toInt() + 1
 //                        val data = like(
 //                            true.toString(),
@@ -107,61 +110,142 @@ class postDetail : AppCompatActivity() {
 //                            .set(data)
                 }
             }
-            var found = false
-            for(i in 0..jmlh){
-                val docRef = db.collection("tbLikes").document(i.toString())
-                docRef.get()
-                    .addOnSuccessListener { document ->
-                        if (document != null) {
-                            if(document.data?.getValue("idForum").toString() == "${idPost}" && document.data?.getValue("idUser").toString() == "${userName}") {
-//                                tvUname.setText("masuk")
-//                                if (document.data?.getValue("hasLiked").toString() == "false") {
-//                                    tvUname.setText("masuk false")
+
+            db.collection("tbLikes")
+                .get()
+                .addOnSuccessListener { result ->
+                    var dbHasCreated = false
+                    for (document in result) {
+                        if(document.data.getValue("idForum").toString().equals(idPost) ){
+                            if(document.data.getValue("idUser").toString().equals(userId.toString())){
+                                Toast.makeText(this@postDetail, "nice", Toast.LENGTH_LONG).show()
+                                dbHasCreated = true
+                                if(document.data.getValue("hasLiked") == false){
+                                    //like
+//unlike
                                     var like = tvLike.text.toString().toInt() + 1
-                                    tvLike.setText(like.toString())
-                                    db.collection("tbForum")
-                                        .document("${idPost}")
-                                        .update("likeCount", like.toString())
-                                val data = like(
-                                    true.toString(),
-                                    idPost.toString(),
-                                    userName
-                                )
-//                                    db.collection("tbLikes")
-//                                        .document(i.toString())
-//                                        .set("hasLiked", "true")
-                                db.collection("tbLikes")
-                                    .document(i.toString())
-                                    .set(data)
-                                    found = true
-                                }
-//                                else if (document.data?.getValue("hasLiked").toString() == "true"){
-//                                    var like = tvLike.text.toString().toInt() - 1
-////                                    tvUname.setText("masuk true")
-//                                    if(like >= 0) {
-//                                        tvLike.setText(like.toString())
-//                                        db.collection("tbForum")
-//                                            .document("${idPost}")
-//                                            .update("likeCount", like.toString())
-////                                        db.collection("tbLikes")
-////                                            .document(i.toString())
-////                                            .update("hasLiked", "false")
-//                                        val data = like(
-//                                            false.toString(),
-//                                            idPost.toString(),
-//                                            userName
-//                                        )
+                                    if(like >= 0) {
+                                        tvLike.setText(like.toString())
+                                        db.collection("tbForum")
+                                            .document("${idPost}")
+                                            .update("likeCount", like.toString())
 //                                        db.collection("tbLikes")
 //                                            .document(i.toString())
-//                                            .set(data)
-//                                        found = true
-//                                    }
-//                                }
-//                            }else{
-//                            }
+//                                            .update("hasLiked", "false")
+                                        val data = like(
+                                            true,
+                                            idPost!!.toInt(),
+                                            userId
+                                        )
+                                        db.collection("tbLikes")
+                                            .document("${document.id}")
+                                            .set(data)
+                                    }
+                                }else{
+                                    //unlike
+                                    var like = tvLike.text.toString().toInt() - 1
+                                    if(like >= 0) {
+                                        tvLike.setText(like.toString())
+                                        db.collection("tbForum")
+                                            .document("${idPost}")
+                                            .update("likeCount", like.toString())
+//                                        db.collection("tbLikes")
+//                                            .document(i.toString())
+//                                            .update("hasLiked", "false")
+                                        val data = like(
+                                            false,
+                                            idPost!!.toInt(),
+                                            userId
+                                        )
+                                        db.collection("tbLikes")
+                                            .document("${document.id}")
+                                            .set(data)
+                                    }
+
+                                }
+                                break
+                            }
+
+                        }
+
+                    }
+
+                    if(dbHasCreated == false){
+                        //create db like
+                        var like = tvLike.text.toString().toInt() + 1
+                        if(like >= 0) {
+                            tvLike.setText(like.toString())
+                            db.collection("tbForum")
+                                .document("${idPost}")
+                                .update("likeCount", like.toString())
+
+                            val data = like(
+                                true,
+                                idPost!!.toInt(),
+                                userId
+                            )
+                            db.collection("tbLikes")
+                                .add(data)
                         }
                     }
-            }
+
+                }
+
+//            var found = false
+//            for(i in 0..jmlh){
+//                val docRef = db.collection("tbLikes").document(i.toString())
+//                docRef.get()
+//                    .addOnSuccessListener { document ->
+//                        if (document != null) {
+//                            if(document.data?.getValue("idForum").toString() == "${idPost}" && document.data?.getValue("idUser").toString() == "${userName}") {
+////                                tvUname.setText("masuk")
+////                                if (document.data?.getValue("hasLiked").toString() == "false") {
+////                                    tvUname.setText("masuk false")
+//                                    var like = tvLike.text.toString().toInt() + 1
+//                                    tvLike.setText(like.toString())
+//                                    db.collection("tbForum")
+//                                        .document("${idPost}")
+//                                        .update("likeCount", like.toString())
+//                                val data = like(
+//                                    true.toString(),
+//                                    idPost.toString(),
+//                                    userName
+//                                )
+////                                    db.collection("tbLikes")
+////                                        .document(i.toString())
+////                                        .set("hasLiked", "true")
+//                                db.collection("tbLikes")
+//                                    .document(i.toString())
+//                                    .set(data)
+//                                    found = true
+//                                }
+////                                else if (document.data?.getValue("hasLiked").toString() == "true"){
+////                                    var like = tvLike.text.toString().toInt() - 1
+//////                                    tvUname.setText("masuk true")
+////                                    if(like >= 0) {
+////                                        tvLike.setText(like.toString())
+////                                        db.collection("tbForum")
+////                                            .document("${idPost}")
+////                                            .update("likeCount", like.toString())
+//////                                        db.collection("tbLikes")
+//////                                            .document(i.toString())
+//////                                            .update("hasLiked", "false")
+////                                        val data = like(
+////                                            false.toString(),
+////                                            idPost.toString(),
+////                                            userName
+////                                        )
+////                                        db.collection("tbLikes")
+////                                            .document(i.toString())
+////                                            .set(data)
+////                                        found = true
+////                                    }
+////                                }
+////                            }else{
+////                            }
+//                        }
+//                    }
+//            }
 //                    if (found == false){
 //                        var like = tvLike.text.toString().toInt() + 1
 //                        val data = like(

@@ -91,7 +91,7 @@ class Homepage : AppCompatActivity() {
         adapterF.setOnItemClickCallback(object : adapterForum.OnItemClickCallback{
             override fun onItemClicked(data: Forum) {
                 val intent = Intent(this@Homepage, postDetail::class.java)
-                intent.putExtra("data user", data.id)
+                intent.putExtra("data user", data.id.toString())
                 startActivity(intent)
             }
 

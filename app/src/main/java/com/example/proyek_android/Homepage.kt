@@ -136,7 +136,7 @@ class Homepage : AppCompatActivity() {
                                 showData(_rvForum)
                             }
                         }
-                        sortData()
+                        sortData(false)
                         showData(_rvForum)
                         _btnNewest.setOnClickListener {
                             sortData(false)
@@ -162,8 +162,6 @@ class Homepage : AppCompatActivity() {
 //        arCategory.add("Art")
 
         //menampilkan dat
-        _rvForum.adapter = adapterForum(arForum)
-
         //Toast.makeText(this@Homepage, "${userId}", Toast.LENGTH_LONG).show()
         val _btnProfile = findViewById<ImageButton>(R.id.btnProfile)
         val _btnCreateForum = findViewById<ImageView>(R.id.btnCreateForumHome)

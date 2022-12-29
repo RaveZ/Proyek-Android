@@ -24,7 +24,7 @@ class adapterManageForum(private val listForum : MutableList<Forum>) :
     private lateinit var onItemClickCallback: OnItemClickCallback
 
     interface OnItemClickCallback{
-        fun delData(pos : Int)
+        fun delData(dForum : Forum)
     }
     fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback){
         this.onItemClickCallback = onItemClickCallback
@@ -54,12 +54,12 @@ class adapterManageForum(private val listForum : MutableList<Forum>) :
         }
 
         holder._btnDelete.setOnClickListener{
-            onItemClickCallback.delData(position)
+            onItemClickCallback.delData(forum)
         }
 
         holder._forumItem.setOnClickListener {
             val intent = Intent(it.context, postDetail::class.java).apply {
-                putExtra(postDetail.dataUser, position.toString())
+                putExtra(postDetail.dataUser, forum.id.toString())
             }
             it.context.startActivity(intent)
         }

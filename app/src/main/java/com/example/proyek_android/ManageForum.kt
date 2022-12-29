@@ -69,14 +69,23 @@ class ManageForum : AppCompatActivity() {
                 _rvManageForum.adapter = adapterF
 
                 adapterF.setOnItemClickCallback(object: adapterManageForum.OnItemClickCallback{
-                    override fun delData(pos: Int) {
+                    override fun delData(dForum : Forum) {
                         AlertDialog.Builder(this@ManageForum)
                             .setTitle("DELETE FORUM")
                             .setMessage("Are you sure?")
                             .setPositiveButton(
                                 "DELETE",
                                 DialogInterface.OnClickListener{ dialog, which ->
-                                    db.collection("tbForum").document("${pos}").delete()
+                                    db.collection("tbForum").document("${dForum.id}").delete()
+                                    db.collection("tbLikes")
+                                        .get()
+                                        .addOnSuccessListener { result ->
+                                            for (document in result) {
+                                                if(document.data.getValue("idForum").toString().equals(dForum.id.toString())){
+                                                    db.collection("tbLikes").document("${document.id}").delete()
+                                                }
+                                            }
+                                            }
                                     arForum.clear()
                                     TampilkanData()
                                 }

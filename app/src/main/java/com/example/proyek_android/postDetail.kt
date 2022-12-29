@@ -89,27 +89,6 @@ class postDetail : AppCompatActivity() {
 
         //button
         btnLike.setOnClickListener {
-            val cQuery = db.collection("tbLikes").count()
-            var jmlh = 0
-            cQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    jmlh = task.result.count.toString().toInt()
-                }else{
-
-//                        var like = tvLike.text.toString().toInt() + 1
-//                        val data = like(
-//                            true.toString(),
-//                            idPost.toString(),
-//                            userName
-//                        )
-//                        db.collection("tbForum")
-//                            .document("${idPost}")
-//                            .update("likeCount", like.toString())
-//                        db.collection("tbLikes")
-//                            .document("0")
-//                            .set(data)
-                }
-            }
 
             db.collection("tbLikes")
                 .get()
